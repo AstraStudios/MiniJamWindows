@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
+
 struct Window {
     public Window(string name, string description_) {
         sceneName = name;
