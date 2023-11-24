@@ -40,10 +40,8 @@ public class RodManager : MonoBehaviour
     private void Update()
     {
         // to cast
-        if (Input.GetMouseButton(1))
-        {
-            casting = true;
-        }
+        if (Input.GetMouseButton(1)) casting = true;
+
         if (Input.GetMouseButtonUp(1))
         {
             if (!GameObject.Find("PlaceHolderBobber(Clone)")) {Instantiate(bobber, new Vector2(Random.Range(-7, 7), power), Quaternion.identity);}
@@ -67,5 +65,8 @@ public class RodManager : MonoBehaviour
             lineRenderer.SetPosition(0, lineStartPoint.transform.position);
             lineRenderer.SetPosition(1, GameObject.Find("PlaceHolderBobber(Clone)").transform.position);
         }
+        // pull up(hopefully gets better)
+        if(GameObject.Find("PlaceHolderBobber(Clone)")) if (Vector2.Distance(GameObject.Find("PlaceHolderBobber(Clone)").transform.position, lineStartPoint.transform.position) <= 1) if (Input.GetKeyDown(KeyCode.E)) Destroy(GameObject.Find("PlaceHolderBobber(Clone)"));
     }
+
 }

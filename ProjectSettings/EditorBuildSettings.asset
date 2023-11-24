@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/sethtesting.unity
     guid: 79d31b97adb5be645860ad164d182556
   - enabled: 1
+    path: Assets/Scenes/sethtesting2.unity
+    guid: e6ae56a8d569b49439aa3fadd41d3043
+  - enabled: 1
     path: Assets/Scenes/FishingSystemTest.unity
     guid: dad867fb65ced4010bdfa61395428176
   m_configObjects: {}
