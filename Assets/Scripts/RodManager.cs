@@ -11,6 +11,7 @@ public class RodManager : MonoBehaviour
 
     // add these for each rod
     [Header("Rod Independents")]
+    [SerializeField] GameObject rod;
     [SerializeField] string rodName;
     [SerializeField] float rodStrength;
     //[SerializeField] float rodUseAmount; // define later
@@ -25,6 +26,8 @@ public class RodManager : MonoBehaviour
 
     float power = -3;
     bool casting = false;
+
+    float reelSpeed = 2f;
 
     private void Start()
     {
@@ -43,7 +46,7 @@ public class RodManager : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(1))
         {
-            if (!GameObject.Find("PlaceHolderBobber(Clone)")) Instantiate(bobber, new Vector2(Random.Range(-7, 7), power), Quaternion.identity);
+            if (!GameObject.Find("PlaceHolderBobber(Clone)")) {Instantiate(bobber, new Vector2(Random.Range(-7, 7), power), Quaternion.identity);}
             if (GameObject.Find("PlaceHolderBobber(Clone)")) Debug.Log("Already casted");
 
             lineRenderer.enabled = true;
@@ -56,5 +59,13 @@ public class RodManager : MonoBehaviour
             if (power >= 4) { power = 4; casting = false; } // maybe run a `finish_cast` function or something
         }
         // end cast
+        // reel in
+        if (Input.GetMouseButton(0))
+        {
+            float step = reelSpeed * Time.deltaTime;
+            GameObject.Find("PlaceHolderBobber(Clone)").transform.position = Vector2.MoveTowards(GameObject.Find("PlaceHolderBobber(Clone)").transform.position, lineStartPoint.transform.position, step);
+            lineRenderer.SetPosition(0, lineStartPoint.transform.position);
+            lineRenderer.SetPosition(1, GameObject.Find("PlaceHolderBobber(Clone)").transform.position);
+        }
     }
 }

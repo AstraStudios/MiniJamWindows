@@ -764,6 +764,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9cb54c7799ab4d29a8c627327c6cca6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rod: {fileID: 1500455478}
   rodName: 
   rodStrength: 0
   rodPrice: 0
