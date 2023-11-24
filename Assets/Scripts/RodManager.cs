@@ -24,6 +24,7 @@ public class RodManager : MonoBehaviour
     LineRenderer lineRenderer;
 
     float power = 1;
+    bool casting = false;
 
     private void Start()
     {
@@ -35,22 +36,16 @@ public class RodManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButton(1))
-        {
-            CastOut();
-        }
-    }
-
-    void CastOut()
-    {
-        while (Input.GetMouseButton(1))
-        {
-            if(power<100)power += 1;
-            if (power >= 100) power = 100;
-        }
         if (Input.GetMouseButtonUp(1))
         {
-            bobber.transform.Translate(power / 100, 0, 0);
+            casting = true;
+            Instantiate(bobber, new Vector2(0, power / 10), Quaternion.identity);
+        }
+
+        if (casting)
+        {
+            if (power < 100) power += 1; // try to use delta time instead of a constant
+            if (power >= 100) { power = 100; casting = false; } // maybe run a `finish_cast` function or something
         }
     }
 }
