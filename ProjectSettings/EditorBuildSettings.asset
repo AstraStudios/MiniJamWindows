@@ -5,7 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/sethtesting.unity
+    guid: 79d31b97adb5be645860ad164d182556
+  - enabled: 1
+    path: Assets/Scenes/FishingSystemTest.unity
+    guid: dad867fb65ced4010bdfa61395428176
   m_configObjects: {}
