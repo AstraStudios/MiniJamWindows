@@ -15,10 +15,7 @@ public class DisplayInfoOnHover : MonoBehaviour, IPointerEnterHandler, IPointerE
         item = new my_text_item(text);
     }
 
-    private void Update()
-    {
-        item.text = text;
-    }
+    private void Update() { item.text = text; }
 
     // TODO: text can change between events, implement id system generated for each of these 
     public void OnPointerEnter(PointerEventData e)
