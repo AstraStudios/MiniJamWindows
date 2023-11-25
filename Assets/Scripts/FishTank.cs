@@ -12,11 +12,26 @@ public class FishUITank : MonoBehaviour
         fishies = new List<FishUI>();
     }
 
+    // random number from a seed
+    private float hash(float p)
+    {
+        p = (p * 0.011f) % 1f; 
+        p *= p + 7.5f; 
+        p *= p + p;
+        return p % 1f;
+    }
+
     private void Update()
     {
+        Rect tank_size = gameObject.GetComponent<RectTransform>().rect;
+
+        float index = 1;
         foreach (FishUI fish in fishies)
         {
-            fish.gameObject.transform.position = transform.position + new Vector3(Random.value-.5f, Random.value-.5f, Random.value-.5f) * 40;
+            fish.gameObject.transform.position = transform.position + 
+                Vector3.right * Mathf.Sin(Time.time * index) * (tank_size.width / 2f - 50f) + 
+                Vector3.up    * (hash(index+.1f) - .5f)          * (tank_size.height - 50f);
+            index++;
         }
     }
 
