@@ -7,7 +7,9 @@ using TMPro;
 public class RodManager : MonoBehaviour
 {
     [Header("Preset UI")]
-    //Add stuff here
+    //Not for main scene
+    [SerializeField] Slider castPowerSlider;
+    [SerializeField] GameObject castPowerSliderObj;
 
     // add these for each rod
     [Header("Rod Independents")]
@@ -53,8 +55,11 @@ public class RodManager : MonoBehaviour
         }
         if (casting)
         {
-            if (power < 4) power += Time.deltaTime; // try to use delta time instead of a constant
-            if (power >= 4) { power = 4; casting = false; } // maybe run a `finish_cast` function or something
+            castPowerSliderObj.SetActive(true);
+            while (casting) castPowerSlider.value = power;
+            if (power < 4) power += Time.deltaTime * 2; // delta time * 2 because delta time is too slow
+            if (power >= 4) { power = 4; casting = false; }
+            Debug.Log(power);
         }
         // end cast
         // reel in
@@ -68,5 +73,4 @@ public class RodManager : MonoBehaviour
         // pull up(hopefully gets better)
         if (GameObject.Find("PlaceHolderBobber(Clone)")) if (Vector2.Distance(GameObject.Find("PlaceHolderBobber(Clone)").transform.position, lineStartPoint.transform.position) <= 1) if (Input.GetKeyDown(KeyCode.E)) { Destroy(GameObject.Find("PlaceHolderBobber(Clone)")); power = -3; }
     }
-
 }

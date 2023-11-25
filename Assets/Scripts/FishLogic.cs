@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class FishLogic : MonoBehaviourSingletonPersistent<FishLogic>
+public class FishLogic : MonoBehaviour
 {
     public Fish fishon;
 
@@ -22,44 +22,36 @@ public class FishLogic : MonoBehaviourSingletonPersistent<FishLogic>
     [SerializeField] Sprite RainbowTroutSprite;
     [SerializeField] Sprite SalmonSprite;
 
-    [Header("Lakes")]
+    // lakes
     [SerializeField] List<Fish> LakePowell = new List<Fish>();
-    [SerializeField] List<Fish> Everglades = new List<Fish>();
-    [SerializeField] List<Fish> LakeFork = new List<Fish>();
-    [SerializeField] List<Fish> LakeMichigan = new List<Fish>();
+    List<Fish> Everglades = new List<Fish>();
+    List<Fish> LakeFork = new List<Fish>();
+    List<Fish> LakeMichigan = new List<Fish>();
 
     private void Awake()
     {
-        base.Awake();
-        LakePowell.AddRange(new List<Fish>
-        {
-            new Fish { Name = "Catfish", minWeight = 2, maxWeight = 15, fishSprite = CatfishSprite, fightPower = 5 },
-            new Fish { Name = "Striped Bass", minWeight = 5, maxWeight = 20, fishSprite = StripedBassSprite, fightPower = 6 },
-            new Fish { Name = "Largemouth Bass", minWeight = 1, maxWeight = 12, fishSprite = LargemouthBassSprite, fightPower = 3 },
-            new Fish { Name = "Bluegill", minWeight = .1, maxWeight = 1.4, fishSprite = BlueGillSprite, fightPower = 1 }
-        });
-        Everglades.AddRange(new List<Fish>
-        {
-            new Fish { Name = "Sea Trout", minWeight = 1, maxWeight = 4, fishSprite = SeaTroutSprite, fightPower = 4 },
-            new Fish { Name = "Tarpon", minWeight = 50, maxWeight = 280, fishSprite = TarponSprite, fightPower = 10 },
-            new Fish { Name = "Snook", minWeight = 5, maxWeight = 10, fishSprite = SnookSprite, fightPower = 7 },
-            new Fish { Name = "RedFish", minWeight = 4, maxWeight = 45, fishSprite = RedFishSprite, fightPower = 5 }
-        });
-        LakeFork.AddRange(new List<Fish>
-        {
-            new Fish { Name = "Catfish", minWeight = 2, maxWeight = 15, fishSprite = CatfishSprite, fightPower = 5 },
-            new Fish { Name = "Largemouth Bass", minWeight = 1, maxWeight = 12, fishSprite = LargemouthBassSprite, fightPower = 3 },
-            new Fish { Name = "Crappie", minWeight = .1, maxWeight = 3.67, fishSprite = CrappieSprite, fightPower = 2 },
-            new Fish { Name = "Sunfish", minWeight = .1, maxWeight = 2.1, fishSprite = SunfishSprite, fightPower = 1 },
-            new Fish { Name = "Bluegill", minWeight = .1, maxWeight = 1.4, fishSprite = BlueGillSprite, fightPower = 1 }
-        });
-        LakeMichigan.AddRange(new List<Fish>
-        {
-            new Fish { Name = "Smallmouth Bass", minWeight = .8, maxWeight = 12, fishSprite = SmallmouthBassSprite, fightPower = 4 },
-            new Fish { Name = "Rainbow Trout", minWeight = 1, maxWeight = 6, fishSprite = RainbowTroutSprite, fightPower = 5 },
-            new Fish { Name = "Largemouth Bass", minWeight = 1, maxWeight = 12, fishSprite = LargemouthBassSprite, fightPower = 3 },
-            new Fish { Name = "Salmon", minWeight = 3, maxWeight = 12, fishSprite = SalmonSprite, fightPower = 7 }
-        });
+        LakePowell.Add(new Fish("Catfish", 2, 15, 5, CatfishSprite));
+        LakePowell.Add(new Fish("Striped Bass", 5, 20, 5, StripedBassSprite));
+        LakePowell.Add(new Fish("Largemouth Bass", 1, 12, 3, LargemouthBassSprite));
+        LakePowell.Add(new Fish("Bluegill", 0.1, 1.4, 1, BlueGillSprite));
+        Everglades.Add(new Fish("Sea Trout", 1, 4, 5, SeaTroutSprite));
+        Everglades.Add(new Fish("Tarpon", 50, 280, 10, TarponSprite));
+        Everglades.Add(new Fish("Snook", 5, 10, 7, SnookSprite));
+        Everglades.Add(new Fish("Redfish", 4, 45, 6, RedFishSprite));
+        LakeFork.Add(new Fish("Catfish", 2, 15, 5, CatfishSprite));
+        LakeFork.Add(new Fish("Largemouth Bass", 1, 12, 3, LargemouthBassSprite));
+        LakeFork.Add(new Fish("Crappie", 0.1, 3.67, 4, CrappieSprite));
+        LakeFork.Add(new Fish("Sunfish", 0.1, 12, 1, SunfishSprite));
+        LakeFork.Add(new Fish("Bluegill", 0.1, 1.4, 1, BlueGillSprite));
+        LakeMichigan.Add(new Fish("Smallmouth Bass", 0.8, 12, 2, SmallmouthBassSprite));
+        LakeMichigan.Add(new Fish("Rainbow Trout", 1, 6, 4, RainbowTroutSprite));
+        LakeMichigan.Add(new Fish("Largemouth Bass", 1, 12, 3, LargemouthBassSprite));
+        LakeMichigan.Add(new Fish("Salmon", 3, 12, 6, SalmonSprite));
+    }
+
+    private void Start()
+    {
+        for (int x = 0; x < LakePowell.Count; x++) Debug.Log(LakePowell[x].Name + " the weight is " + (Random.Range((float)LakePowell[x].minWeight, (float)LakePowell[x].maxWeight)));
     }
 
     public void ChooseFish()
@@ -95,6 +87,6 @@ public class FishLogic : MonoBehaviourSingletonPersistent<FishLogic>
                 if (randFish <= 100 && randFish > 96) fishon = LakeMichigan[3];
                 break;
         }
-
+        Debug.Log("Fish that hits is: " + fishon.Name);
     }
 }
