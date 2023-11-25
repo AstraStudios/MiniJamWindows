@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class FishLogic : MonoBehaviourSingletonPersistent<FishLogic>
 {
+    public Fish fishon;
+
     [Header("Fish Sprites")]
     [SerializeField] Sprite CatfishSprite;
     [SerializeField] Sprite StripedBassSprite;
@@ -63,16 +65,36 @@ public class FishLogic : MonoBehaviourSingletonPersistent<FishLogic>
     public void ChooseFish()
     {
         string currLake = SceneManager.GetActiveScene().name;
-        List<Fish> currFish = new List<Fish>();
+        int randFish = Random.Range(0, 100);
 
         switch (currLake)
         {
             case "LakePowell":
-                for (int q = 0; q < LakePowell.Count; q++)
-                {
-                    
-                }
+                if (randFish < 5 && randFish > 0) fishon = LakePowell[1];
+                if (randFish < 20 && randFish > 6) fishon = LakePowell[0];
+                if (randFish < 50 && randFish > 21) fishon = LakePowell[2];
+                if (randFish <= 100 && randFish > 51) fishon = LakePowell[3];
+                break;
+            case "Everglades":
+                if (randFish <= 100 && randFish > 51) fishon = Everglades[0];
+                if (randFish <= 2 && randFish > 0) fishon = Everglades[1];
+                if (randFish < 11 && randFish > 3) fishon = Everglades[2];
+                if (randFish < 50 && randFish > 12) fishon = Everglades[3];
+                break;
+            case "LakeFork":
+                if (randFish < 10 && randFish > 0) fishon = LakeFork[0];
+                if (randFish < 35 && randFish > 11) fishon = LakeFork[1];
+                if (randFish < 50 && randFish > 36) fishon = LakeFork[2];
+                if (randFish < 70 && randFish > 51) fishon = LakeFork[3];
+                if (randFish <= 100 && randFish > 71) fishon = LakeFork[4];
+                break;
+            case "LakeMichigan":
+                if (randFish < 60 && randFish > 0) fishon = LakeMichigan[0];
+                if (randFish < 70 && randFish > 61) fishon = LakeMichigan[1];
+                if (randFish < 95 && randFish > 71) fishon = LakeMichigan[2];
+                if (randFish <= 100 && randFish > 96) fishon = LakeMichigan[3];
                 break;
         }
+
     }
 }
