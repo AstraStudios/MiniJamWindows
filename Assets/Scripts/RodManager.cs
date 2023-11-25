@@ -46,6 +46,8 @@ public class RodManager : MonoBehaviour
 
         if (Input.GetMouseButtonUp(1))
         {
+            casting = false;
+            castPowerSliderObj.SetActive(false);
             if (!GameObject.Find("PlaceHolderBobber(Clone)")) {Instantiate(bobber, new Vector2(Random.Range(-7, 7), power), Quaternion.identity);}
             if (GameObject.Find("PlaceHolderBobber(Clone)")) Debug.Log("Already casted");
 
@@ -56,8 +58,7 @@ public class RodManager : MonoBehaviour
         if (casting)
         {
             castPowerSliderObj.SetActive(true);
-            while (casting) castPowerSlider.value = power;
-            if (power < 4) power += Time.deltaTime * 2; // delta time * 2 because delta time is too slow
+            if (power < 4) power += Time.deltaTime * 2; castPowerSlider.value = power; // delta time * 2 because delta time is too slow
             if (power >= 4) { power = 4; casting = false; }
             Debug.Log(power);
         }
