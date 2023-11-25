@@ -634,8 +634,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1161097945748442300}
-        m_TargetAssemblyTypeName: FishTank, Assembly-CSharp
-        m_MethodName: addFish
+        m_TargetAssemblyTypeName: FishUITank, Assembly-CSharp
+        m_MethodName: move_fish
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -657,6 +657,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4b0f25b1b0a4dd4a9c1878c31e639ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sell_tank: 0
   fishies: []
   capacity: 0
 --- !u!1 &3446963549997915548
@@ -847,6 +848,7 @@ MonoBehaviour:
   rod_display_box: {fileID: 934725338482466451}
   bait_display_box: {fileID: 2437354354026271703}
   dummy_fish_prefab: {fileID: 3227535182081947732, guid: 8e3785221eb4e184dbe6e8efc0c99f5c, type: 3}
+  money: 0
   current_fish: {fileID: 0}
   current_rod: {fileID: 0}
   current_bait: {fileID: 0}

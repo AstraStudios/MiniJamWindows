@@ -14,6 +14,8 @@ public class InventoryManager : MonoBehaviourSingletonPersistent<InventoryManage
 
     [SerializeField] GameObject dummy_fish_prefab; // delete me later
 
+    public float money;
+
     public FishUI current_fish;
     public RodUI current_rod;
     public BaitUI current_bait;
