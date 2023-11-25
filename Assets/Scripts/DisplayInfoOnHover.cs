@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class DisplayInfoOnHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    // ONLY USE THIS VARIABLE
     [TextArea(15,20)] public string text;
 
     private my_text_item item;
@@ -17,7 +18,6 @@ public class DisplayInfoOnHover : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     private void Update() { item.text = text; }
 
-    // TODO: text can change between events, implement id system generated for each of these 
     public void OnPointerEnter(PointerEventData e)
     {
         FishInfoPopup.Instance.text_queue.Add(item);
