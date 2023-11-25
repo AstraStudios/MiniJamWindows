@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FishUITank : MonoBehaviour
+public class FishTank : MonoBehaviour
 {
+    [SerializeField] bool sell_tank = false;
+
     public List<FishUI> fishies;
     public int capacity;
 
@@ -28,15 +30,21 @@ public class FishUITank : MonoBehaviour
         float index = 1;
         foreach (FishUI fish in fishies)
         {
-            fish.gameObject.transform.position = transform.position + 
-                Vector3.right * Mathf.Sin(Time.time * index) * (tank_size.width / 2f - 50f) + 
-                Vector3.up    * (hash(index+.1f) - .5f)          * (tank_size.height - 50f);
+            Rect fish_size = fish.GetComponent<RectTransform>().rect;
+
+            fish.gameObject.transform.position = new Vector3(
+                transform.position.x + Mathf.Sin(Time.time * index) * ((tank_size.width - fish_size.width) / 2f),
+                fish.transform.position.y,
+                fish.transform.position.z
+            );
             index++;
         }
     }
 
-    public void addFish()
+    public void move_fish()
     {
+
+        // put fish in tank
         if (InventoryManager.Instance.current_fish)
         {
             FishUI fish = InventoryManager.Instance.current_fish;
@@ -44,7 +52,34 @@ public class FishUITank : MonoBehaviour
 
             fishies.Add(fish);
 
-            fish.transform.parent = transform;
+            Rect tank_size = gameObject.GetComponent<RectTransform>().rect;
+            Rect fish_size = fish.GetComponent<RectTransform>().rect;
+
+            fish.transform.SetParent(transform);
+            fish.transform.position = transform.position + Vector3.up * (hash(Time.time*1000f) - .5f) * (tank_size.height - fish_size.height);
+
+            // if this is the shop's tank
+            if (sell_tank)
+            {
+                // calculate price
+                float price = 10f;
+                if (fish.name == "john")
+                    price = 15f;
+
+                InventoryManager.Instance.money += price;
+            }
+        }
+
+        // take fish out of tank
+        // TODO: move this to the fishui script so you can click specific fish
+        else if (fishies.Count > 0)
+        {
+            if (sell_tank) return;
+
+            FishUI fish = fishies[0];
+            InventoryManager.Instance.current_fish = fish;
+
+            fishies.RemoveAt(0);
         }
     }
 }
