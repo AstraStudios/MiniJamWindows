@@ -1,18 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FishLogic : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [Header("Fish")]
+    [SerializeField] GameObject Catfish;
+    [SerializeField] GameObject StripedBass;
+    [SerializeField] GameObject LargemouthBass;
+    [SerializeField] GameObject BlueGill;
+    [SerializeField] GameObject SeaTrout;
+    [SerializeField] GameObject Tarpon;
+    [SerializeField] GameObject Snook;
+    [SerializeField] GameObject RedFish;
+    [SerializeField] GameObject Crappie;
+    [SerializeField] GameObject Sunfish;
+    [SerializeField] GameObject SmallmouthBass;
+    [SerializeField] GameObject RainbowTrout;
+    [SerializeField] GameObject Salmon;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }
