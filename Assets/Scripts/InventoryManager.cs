@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 // UNIMPLEMENTED
 public class RodUI: MonoBehaviour { }
@@ -12,13 +13,15 @@ public class InventoryManager : MonoBehaviourSingletonPersistent<InventoryManage
     [SerializeField] Transform rod_display_box;
     [SerializeField] Transform bait_display_box;
 
+    [SerializeField] TMP_Text coin_text;
+
     [SerializeField] GameObject dummy_fish_prefab; // delete me later
 
     public float money;
 
-    public FishUI current_fish;
-    public RodUI current_rod;
-    public BaitUI current_bait;
+    [HideInInspector] public FishUI current_fish;
+    [HideInInspector] public RodUI current_rod;
+    [HideInInspector] public BaitUI current_bait;
 
     private void Start()
     {
@@ -42,5 +45,7 @@ public class InventoryManager : MonoBehaviourSingletonPersistent<InventoryManage
             current_rod.transform.SetParent(rod_display_box);
             current_rod.transform.position = fish_display_box.position;
         }
+
+        coin_text.text = money.ToString();
     }
 }
