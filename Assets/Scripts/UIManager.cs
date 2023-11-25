@@ -7,12 +7,12 @@ using TMPro;
 
 struct Window {
     public Window(string name, string description_) {
-        sceneName = name;
+        scene_name = name;
         description = description_;
         timer = 0;
     }
 
-    public string sceneName;
+    public string scene_name;
     public string description;
     public float timer;
 }
@@ -105,7 +105,7 @@ The WORST lake in the Northeast!
             closing_shutters = false;
 
             // load scene
-            SceneManager.LoadScene(windows[(int)active_window_index].sceneName);
+            SceneManager.LoadScene(windows[(int)active_window_index].scene_name);
             description.text = windows[(int)active_window_index].description;
         }
         // if we just finished opening
