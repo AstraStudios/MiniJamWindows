@@ -48,6 +48,12 @@ public class UIManager : MonoBehaviourSingletonPersistent<UIManager>
         windows = new List<Window>();
         windows.Add(new Window(
             SceneManager.GetActiveScene().name,
+@"The Shop
+
+Sell your fish and buy new gear!"
+       ));
+
+        windows.Add(new Window("sethtesting",
 @"Silly Lake
 
 The best lake in the Northeast!

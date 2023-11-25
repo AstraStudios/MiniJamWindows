@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-// UNIMPLEMENTED
-public class RodUI: MonoBehaviour { }
-public class BaitUI: MonoBehaviour { }
-
 public class InventoryManager : MonoBehaviourSingletonPersistent<InventoryManager>
 {
     [SerializeField] Transform fish_display_box;
@@ -38,12 +34,12 @@ public class InventoryManager : MonoBehaviourSingletonPersistent<InventoryManage
         if (current_bait != null)
         {
             current_bait.transform.SetParent(bait_display_box);
-            current_bait.transform.position = fish_display_box.position;
+            current_bait.transform.position = bait_display_box.position;
         }
         if (current_rod != null)
         {
             current_rod.transform.SetParent(rod_display_box);
-            current_rod.transform.position = fish_display_box.position;
+            current_rod.transform.position = rod_display_box.position;
         }
 
         coin_text.text = money.ToString();

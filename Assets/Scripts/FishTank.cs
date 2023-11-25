@@ -9,9 +9,16 @@ public class FishTank : MonoBehaviour
     public List<FishUI> fishies;
     public int capacity;
 
+    private DisplayInfoOnHover hover_text;
+
     public void Awake()
     {
         fishies = new List<FishUI>();
+    }
+
+    private void Start()
+    {
+        hover_text = gameObject.AddComponent<DisplayInfoOnHover>();
     }
 
     // random number from a seed
@@ -39,8 +46,20 @@ public class FishTank : MonoBehaviour
             );
             index++;
         }
+
+        if (sell_tank)
+        {
+            hover_text.text = "Click me to sell your fish.\n\n\"Uh oh...\" - fish";
+            return;
+        }
+
+        if (InventoryManager.Instance.current_fish)
+            hover_text.text = "Click me to store your fish.\n\n\"I'm home!\" - fish";
+        else
+            hover_text.text = "Click me to take a fish.\n\n\"NOOOO!!!\" - fish";
     }
 
+    // called when clicked
     public void move_fish()
     {
 
