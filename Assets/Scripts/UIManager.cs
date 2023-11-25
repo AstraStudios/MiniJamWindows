@@ -6,10 +6,10 @@ using TMPro;
 
 
 struct Window {
-    public Window(string name, string description_) {
+    public Window(string name, float timer_, string description_) {
         scene_name = name;
         description = description_;
-        timer = 0;
+        timer = timer_;
     }
 
     public string scene_name;
@@ -47,13 +47,13 @@ public class UIManager : MonoBehaviourSingletonPersistent<UIManager>
 
         windows = new List<Window>();
         windows.Add(new Window(
-            SceneManager.GetActiveScene().name,
+            "shop", (1f*60f)+30f,
 @"The Shop
 
 Sell your fish and buy new gear!"
        ));
 
-        windows.Add(new Window("sethtesting",
+        windows.Add(new Window("sethtesting", (1f*60f),
 @"Silly Lake
 
 The best lake in the Northeast!
@@ -62,7 +62,7 @@ The best lake in the Northeast!
 - A bit of Carp"
        ));
 
-        windows.Add(new Window("sethtesting2",
+        windows.Add(new Window("sethtesting2", 30f,
 @"Evil Lake ):<
 
 The WORST lake in the Northeast!
