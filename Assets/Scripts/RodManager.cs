@@ -66,7 +66,7 @@ public class RodManager : MonoBehaviour
             lineRenderer.SetPosition(1, GameObject.Find("PlaceHolderBobber(Clone)").transform.position);
         }
         // pull up(hopefully gets better)
-        if(GameObject.Find("PlaceHolderBobber(Clone)")) if (Vector2.Distance(GameObject.Find("PlaceHolderBobber(Clone)").transform.position, lineStartPoint.transform.position) <= 1) if (Input.GetKeyDown(KeyCode.E)) Destroy(GameObject.Find("PlaceHolderBobber(Clone)"));
+        if (GameObject.Find("PlaceHolderBobber(Clone)")) if (Vector2.Distance(GameObject.Find("PlaceHolderBobber(Clone)").transform.position, lineStartPoint.transform.position) <= 1) if (Input.GetKeyDown(KeyCode.E)) { Destroy(GameObject.Find("PlaceHolderBobber(Clone)")); power = -3; }
     }
 
 }
