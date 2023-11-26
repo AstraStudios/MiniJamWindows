@@ -107,11 +107,27 @@ The WORST lake in the Northeast!
         ));
 
         windows.Add(new Window(
-            "LakePowell", true, 0f, 120f,
+            "LakePowell", false, 15f, 45f,
             @"Lake Powell
 
             Basic Lake with Catfish, Largemouth Bass, Striped Bass, Bluegill.
             Enjoyable time for the whole family."
+        ));
+
+        windows.Add(new Window(
+            "LakeFork", true, 0f, 120f,
+            @"Lake Fork
+            In the center of Texas with five types of fish, good starter lake."
+        ));
+        windows.Add(new Window(
+            "Everglades", false, 120f, 120f,
+            @"Everglades
+            Most difficult area of water, located in Florida with lots of big fish."
+        ));
+        windows.Add(new Window(
+            "LakeMichigan",false, 30f, 60f,
+            @"Lake Michigan
+            One of the Great Lakes where you can catch salmon among other things."
         ));
     }
 

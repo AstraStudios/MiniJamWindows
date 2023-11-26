@@ -34,12 +34,14 @@ public class FishTank : MonoBehaviour
         foreach (FishUI fish in fishies)
         {
             Rect fish_size = fish.GetComponent<RectTransform>().rect;
+            SpriteRenderer fishRenderer = fish.gameObject.GetComponent<SpriteRenderer>();
 
             fish.gameObject.transform.position = new Vector3(
                 transform.position.x + Mathf.Sin(Time.time * index) * ((tank_size.width - fish_size.width) / 2f),
                 fish.transform.position.y,
                 fish.transform.position.z
-            );
+            ) ;
+            fishRenderer.flipX = true;
             index++;
         }
 

@@ -83,7 +83,6 @@ public class FishLogic : MonoBehaviour
                 if (randFish <= 100 && randFish > 96) fishon = LakeMichigan[3];
                 break;
         }
-        fishon = LakePowell[Random.Range(0, LakePowell.Count)];
         isFishOn = true;
     }
 }
