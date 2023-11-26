@@ -21,6 +21,7 @@ public class RodManager : MonoBehaviour
 
     // add these for each rod
     [Header("Rod Independents")]
+    [SerializeField] string rodName;
     [SerializeField] GameObject rodSprite;
     [SerializeField] float rodStrength;
     [SerializeField] SpriteRenderer spriteRenderer;

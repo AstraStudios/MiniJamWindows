@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class RodUI : MonoBehaviour
 {
-    public string name;
-    public string description;
+    public string _name;
+    public string _fightPower;
 
     private void Start()
     {
-        gameObject.AddComponent<DisplayInfoOnHover>().text = name + "\n\n\"" + description + "\"";
+        gameObject.AddComponent<DisplayInfoOnHover>().text = _name + "\n\n\"" + _fightPower + "\"";
     }
 }
