@@ -23,4 +23,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LakePowell.unity
     guid: cc5870d386462409c93034887be8c1f4
+  - enabled: 1
+    path: Assets/Scenes/LakeMichigan.unity
+    guid: 962b3b9411a0d401485f1f90ab237041
+  - enabled: 1
+    path: Assets/Scenes/LakeFork.unity
+    guid: b0a636a62bd8b4673af8a7059d78b322
+  - enabled: 1
+    path: Assets/Scenes/Everglades.unity
+    guid: 9a58a90a412c44c2493bc08834824fe3
   m_configObjects: {}
