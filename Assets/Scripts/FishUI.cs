@@ -5,6 +5,7 @@ using UnityEngine;
 public class FishUI : MonoBehaviour
 {
     public string name;
+    public double weight;
 
     private void Start()
     {

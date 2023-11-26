@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class FishLogic : MonoBehaviour
 {
     public Fish fishon;
+    public bool isFishOn = false;
 
     [Header("Fish Sprites")]
     [SerializeField] Sprite CatfishSprite;
@@ -87,6 +88,7 @@ public class FishLogic : MonoBehaviour
                 if (randFish <= 100 && randFish > 96) fishon = LakeMichigan[3];
                 break;
         }
-        Debug.Log("Fish that hits is: " + fishon.Name);
+        fishon = LakePowell[Random.Range(0, LakePowell.Count)];
+        isFishOn = true;
     }
 }
