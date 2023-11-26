@@ -50,11 +50,6 @@ public class FishLogic : MonoBehaviour
         LakeMichigan.Add(new Fish("Salmon", 3, 12, 6, SalmonSprite));
     }
 
-    private void Start()
-    {
-        for (int x = 0; x < LakePowell.Count; x++) Debug.Log(LakePowell[x].Name + " the weight is " + (Random.Range((float)LakePowell[x].minWeight, (float)LakePowell[x].maxWeight)));
-    }
-
     public void ChooseFish()
     {
         string currLake = SceneManager.GetActiveScene().name;

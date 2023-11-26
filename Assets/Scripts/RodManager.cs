@@ -93,9 +93,11 @@ public class RodManager : MonoBehaviour
         }
         // pull up(hopefully gets better)
         if (GameObject.Find("Bobber(Clone)"))
-            if (Vector2.Distance(GameObject.Find("Bobber(Clone)").transform.position, lineStartPoint.transform.position) <= 3f)
+            if (Vector2.Distance(GameObject.Find("Bobber(Clone)").transform.position, lineStartPoint.transform.position) <= 1f)
+                pullupFishObj.SetActive(true);
                 if (Input.GetKeyDown(KeyCode.E) && fishLogicScript.isFishOn) StartCoroutine(DisplayStatsForSeconds());
-                if (Input.GetKeyDown(KeyCode.E)) { Destroy(GameObject.Find("Bobber(Clone)")); power = -3; fishLogicScript.isFishOn = false; fishCaught = false; fishChosen = false; }
+                if (Input.GetKeyDown(KeyCode.E)) { Destroy(GameObject.Find("Bobber(Clone)")); power = -3; fishLogicScript.isFishOn = false; fishCaught = false; fishChosen = false; pullupFishObj.SetActive(false); }
+            
         // fish fighting mechanics
         if (fishLogicScript.isFishOn)
         {
@@ -105,17 +107,17 @@ public class RodManager : MonoBehaviour
         // make sure the fish moves when its not caught
         if (fishCaught && totalSpeed >= 0) {
             GameObject.Find("Bobber(Clone)").transform.position += Vector3.up * totalSpeed * Time.deltaTime;
-            if (Vector2.Distance(GameObject.Find("Bobber(Clone)").transform.position, lineStartPoint.transform.position) <= 2f)
+            if (Vector2.Distance(GameObject.Find("Bobber(Clone)").transform.position, lineStartPoint.transform.position) <= 1f)
                 totalSpeed = 0;
 
         }
         // if the fish has not been pulled up, reel in with that rods strength
         if (fishCaught && totalSpeed >= 0)
-            if (Input.GetMouseButtonDown(0))
-                GameObject.Find("Bobber(Clone)").transform.position -= (GameObject.Find("Bobber(Clone)").transform.position - lineStartPoint.transform.position).normalized * rodStrength;
+            if (Input.GetMouseButton(0))
+                GameObject.Find("Bobber(Clone)").transform.position -= (GameObject.Find("Bobber(Clone)").transform.position - lineStartPoint.transform.position).normalized * rodStrength * .01f;
         // update the line every frame
         lineRenderer.SetPosition(0, lineStartPoint.transform.position);
-        lineRenderer.SetPosition(1, GameObject.Find("Bobber(Clone)").transform.position);
+        if (GameObject.Find("Bobber(Clone)")) lineRenderer.SetPosition(1, GameObject.Find("Bobber(Clone)").transform.position);
     }
 
     void FishCaught()

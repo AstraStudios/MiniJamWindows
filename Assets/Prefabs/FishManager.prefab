@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &904191513957497555
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1246748697760413324}
+  - component: {fileID: 2916639702964831973}
+  m_Layer: 0
+  m_Name: FishManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1246748697760413324
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904191513957497555}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2916639702964831973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904191513957497555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ed4a9a4d01a443afb4d47df74ab7a0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isFishOn: 0
+  CatfishSprite: {fileID: 21300000, guid: 700b65f5cb7164acca88ef65d4f63554, type: 3}
+  StripedBassSprite: {fileID: 21300000, guid: b179f5373655541ee8c8ec31fb0e407f, type: 3}
+  LargemouthBassSprite: {fileID: 21300000, guid: 79f1cc26b38f54361a9667e2bcd77f4b, type: 3}
+  BlueGillSprite: {fileID: 21300000, guid: 63ab5cc9c3db345529fc05fedb9a85e7, type: 3}
+  SeaTroutSprite: {fileID: 21300000, guid: c63100cd946f94c0c9b9cb7528b90178, type: 3}
+  TarponSprite: {fileID: 21300000, guid: 29803c0fc941c430e99f88eb5920f21f, type: 3}
+  SnookSprite: {fileID: 21300000, guid: 39255c0e5bcdc4e938c9e9f9e5156e57, type: 3}
+  RedFishSprite: {fileID: 21300000, guid: 9e2bea5f674e74b62a8f93e40a1267bc, type: 3}
+  CrappieSprite: {fileID: 21300000, guid: 2ed2016cf5bc247f09ff7b38e78dcb58, type: 3}
+  SunfishSprite: {fileID: 21300000, guid: 11a55add6122145efa1636f467f90ee3, type: 3}
+  SmallmouthBassSprite: {fileID: 21300000, guid: 92abb959d33d14cc18266aac085c2abd, type: 3}
+  RainbowTroutSprite: {fileID: 21300000, guid: 676654f0048ac484eb3433577bfa3844, type: 3}
+  SalmonSprite: {fileID: 21300000, guid: 55108700854054c1395e1e7d2353f209, type: 3}
