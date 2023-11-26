@@ -10,11 +10,15 @@ class Window {
     public string description;
     public float timer;
     public bool open = true;
+    public float price;
 
-    public Window(string name, float timer_, string description_) {
+    public Window(string name, bool open_, float price_, float timer_, string description_) {
         scene_name = name;
         description = description_;
         timer = timer_;
+
+        price = price_;
+        open = open_;
     }
 
     // true if should close
@@ -46,6 +50,9 @@ public class UIManager : MonoBehaviourSingletonPersistent<UIManager>
     [SerializeField] Transform shutter_closed;
     [SerializeField] Transform shutter_opened;
 
+    [SerializeField] GameObject buy_button;
+    [SerializeField] TMP_Text buy_button_text;
+
     [SerializeField] TMP_Text description;
     [SerializeField] TMP_Text timer_text;
 
@@ -73,13 +80,14 @@ public class UIManager : MonoBehaviourSingletonPersistent<UIManager>
 
         windows = new List<Window>();
         windows.Add(new Window(
-            "shop", (0f*60f)+15f,
+            "shop", true, 0f, 45f,
 @"The Shop
 
 Sell your fish and buy new gear!"
        ));
 
-        windows.Add(new Window("sethtesting", (1f*60f),
+        windows.Add(new Window(
+            "sethtesting", false, 10f, 0f,
 @"Silly Lake
 
 The best lake in the Northeast!
@@ -88,7 +96,8 @@ The best lake in the Northeast!
 - A bit of Carp"
        ));
 
-        windows.Add(new Window("sethtesting2", 30f,
+        windows.Add(new Window(
+            "sethtesting2", true, 15f, 30f,
 @"Evil Lake ):<
 
 The WORST lake in the Northeast!
@@ -123,10 +132,12 @@ The WORST lake in the Northeast!
             i++;
         }
 
+        Window active_window = windows[active_window_index];
+
         timer_text.text = 
-            Mathf.FloorToInt(windows[active_window_index].timer / 60f).ToString() + 
+            Mathf.FloorToInt(active_window.timer / 60f).ToString() + 
             ":" +
-            Mathf.RoundToInt(windows[active_window_index].timer % 60f).ToString("D2");
+            Mathf.RoundToInt(active_window.timer % 60f).ToString("D2");
 
         // since how open the shutters are is dependent on the difference from the time,
         // if it is the same it is forced to one of the positions
@@ -144,14 +155,14 @@ The WORST lake in the Northeast!
 
             window_state = WindowState.Closed;
 
+            // load scene
+            SceneManager.LoadScene(active_window.scene_name);
+            description.text = active_window.description;
+
             // open new scene
-            if (windows[active_window_index].open)
+            if (active_window.open)
             {
                 window_state = WindowState.Opening;
-
-                // load scene
-                SceneManager.LoadScene(windows[active_window_index].scene_name);
-                description.text = windows[active_window_index].description;
             }
             // if the window is the shop, activate it
             if (active_window_index == 0)
@@ -159,11 +170,11 @@ The WORST lake in the Northeast!
                 window_state = WindowState.Opening;
                 shopUI.SetActive(true);
 
-                if (!windows[active_window_index].open)
+                if (!active_window.open)
                 {
                     ShopManager.Instance.LoadItems();
-                    windows[active_window_index].open = true;
-                    windows[active_window_index].timer = 20f;
+                    active_window.open = true;
+                    active_window.timer = 20f;
                 }
             }
             else shopUI.SetActive(false);
@@ -180,11 +191,37 @@ The WORST lake in the Northeast!
             opening_shutters_percent = 1.0f;
         }
 
+        // display buy area
+        if (!active_window.open)
+        {
+            buy_button.SetActive(true);
+            if (active_window_index == 0) // shop
+                buy_button_text.text = "Going to a new shop...";
+            else
+                buy_button_text.text = "Buy " + active_window.scene_name + " for 15 seconds\n" + active_window.price + "c";
+        }
+        else if (window_state == WindowState.Open) // only disable after the button is hidden
+            buy_button.SetActive(false);
+
         // move shutters from closed to open
         shutters.position = Vector3.Lerp(
             shutter_closed.position,
             shutter_opened.position,
             opening_shutters_percent);
+    }
+
+    public void buy_active_window()
+    {
+        Window active_window = windows[active_window_index];
+
+        if (active_window.open) return;
+        if (InventoryManager.Instance.money < active_window.price) return;
+
+        InventoryManager.Instance.money -= active_window.price;
+
+        active_window.open = true;
+        active_window.timer = 15f;
+        window_state = WindowState.Opening;
     }
 
     void loadWindow(int index)
