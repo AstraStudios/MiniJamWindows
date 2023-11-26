@@ -9,128 +9,158 @@ public class RodManager : MonoBehaviour
 {
     [Header("Preset UI")]
     //Not for main scene
-    [SerializeField] Slider castPowerSlider;
-    [SerializeField] GameObject castPowerSliderObj;
+    [SerializeField] Slider charge_power_slider;
     [SerializeField] GameObject hitText;
-    [SerializeField] GameObject pullupFishObj;
+    [SerializeField] GameObject fish_caught_text;
     [SerializeField] TMP_Text fishStatText;
     [SerializeField] GameObject fishStatObj;
 
     // add these for each rod
     [Header("Rod Independents")]
-    [SerializeField] string rodName;
-    [SerializeField] GameObject rodSprite;
     [SerializeField] float rodStrength;
     //[SerializeField] float rodUseAmount; // define later
 
     [Header("Rod Essientals")]
-    [SerializeField] GameObject lineStartPoint;
-    [SerializeField] GameObject bobber;
-    [SerializeField] Material lineMat;
+    [SerializeField] GameObject rod_tip;
+    [SerializeField] GameObject bobber_prefab;
     [SerializeField] FishLogic fishLogicScript;
 
-    LineRenderer lineRenderer;
+    Vector3 water_point; // where the line is being cast to
 
-    float power = -3;
-    bool casting = false;
-    bool fishWeightSet = false;
-    bool fishChosen = false;
+    float charge_power = 0f;
 
-    float reelSpeed = 1f;
-    bool fishCaught = false;
-    float pullawaySpeed;
-    float totalSpeed;
-
+    float reelSpeed = .5f;
+    float fish_speed;
     public float fishWeight;
+    float in_air_time = 0f;
 
-    private void Start()
+    public enum BobberState
     {
-        //spriteRenderer.sprite = rodSprite;
-        Instantiate(rodSprite, new Vector2(transform.position.x, transform.position.y), Quaternion.identity);
-        // set up line rendering
-        lineRenderer = gameObject.GetComponent<LineRenderer>();
-        lineRenderer.startWidth = .1f;
-        lineRenderer.endWidth = .1f;
-        lineRenderer.material = lineMat;
-        lineRenderer.enabled = false;
+        InHand,
+        Swinging,
+        InAir,
+        WaitingInWater,
+        CaughtInWater,
     }
+    BobberState bobber_state = BobberState.InHand;
+    GameObject bobber;
+    float hit_countdown;
 
     private void Update()
     {
-        // to cast
-        if (Input.GetMouseButton(1) && !GameObject.Find("Bobber(Clone)")) casting = true;
-
-        if (Input.GetMouseButtonUp(1))
+        if (bobber_state == BobberState.InHand)
         {
-            casting = false;
-            castPowerSliderObj.SetActive(false);
-            if (!GameObject.Find("Bobber(Clone)")) {Instantiate(bobber, new Vector2(Random.Range(-7, 7), power), Quaternion.identity);}
+            // start charging
+            if (Input.GetMouseButtonDown(0))
+            {
+                charge_power_slider.gameObject.SetActive(true);
+                bobber_state = BobberState.Swinging;
+                charge_power = 0;
+            }
+        }
 
-            lineRenderer.enabled = true;
-            lineRenderer.SetPosition(0, lineStartPoint.transform.position);
-            lineRenderer.SetPosition(1, GameObject.Find("Bobber(Clone)").transform.position);
+        // holding rod back
+        else if (bobber_state == BobberState.Swinging)
+        {
+            // charge
+            if (charge_power < 1) charge_power += Time.deltaTime / 2f;
+            charge_power = Mathf.Clamp(charge_power, 0f, 1f);
+            charge_power_slider.value = charge_power;
 
-            if(!fishChosen) fishLogicScript.ChooseFish(); fishChosen = true;
-            StartCoroutine(WaitForHit());
+            // cast (make bobber)
+            if (Input.GetMouseButtonUp(0) || charge_power == 1f)
+            {
+                charge_power_slider.gameObject.SetActive(false);
+
+                bobber = Instantiate(bobber_prefab);
+                bobber.transform.position = rod_tip.transform.position;
+                water_point = Vector3.Lerp(rod_tip.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), charge_power);
+
+                bobber_state = BobberState.InAir;
+            }
         }
-        if (casting)
+
+        else if (bobber_state == BobberState.InAir)
         {
-            castPowerSliderObj.SetActive(true);
-            if (power < 4) power += Time.deltaTime * 2; castPowerSlider.value = power; // delta time * 2 because delta time is too slow
-            if (power >= 4) { power = 4; casting = false; }
+            in_air_time += Time.deltaTime * .5f;
+            in_air_time = Mathf.Clamp(in_air_time, 0f, 1f);
+
+            Vector3 air_point = water_point + new Vector3(2, 4f, 0);
+
+            Vector3 ab = Vector3.Lerp(rod_tip.transform.position, air_point, in_air_time);
+            Vector3 bc = Vector3.Lerp(air_point, water_point, in_air_time);
+
+            bobber.transform.position = Vector3.Lerp(ab, bc, in_air_time);
+
+            if (in_air_time == 1f)
+            {
+                fishLogicScript.ChooseFish();
+                hit_countdown = 5f; // RANDOMIZE TIMER
+
+                bobber_state = BobberState.WaitingInWater;
+            }
         }
-        // end cast
-        // reel in
-        if (Input.GetMouseButton(0))
+
+        else if (bobber_state == BobberState.WaitingInWater)
         {
-            float step = reelSpeed * Time.deltaTime;
-            GameObject.Find("Bobber(Clone)").transform.position = Vector2.MoveTowards(GameObject.Find("Bobber(Clone)").transform.position, lineStartPoint.transform.position, step);
-            lineRenderer.SetPosition(0, lineStartPoint.transform.position);
-            lineRenderer.SetPosition(1, GameObject.Find("Bobber(Clone)").transform.position);
+            hit_countdown -= Time.deltaTime;
+
+            // reel in (resets timer)
+            if (Input.GetMouseButton(0))
+            {
+                float distance = reelSpeed * Time.deltaTime;
+                bobber.transform.position = Vector2.MoveTowards(bobber.transform.position, rod_tip.transform.position, distance);
+
+                hit_countdown = 5f;
+            }
+
+            if (hit_countdown <= 0f)
+            {
+                bobber_state = BobberState.CaughtInWater;
+                FishCaught();
+            }
         }
-        // pull up(hopefully gets better)
-        if (GameObject.Find("Bobber(Clone)"))
-            if (Vector2.Distance(GameObject.Find("Bobber(Clone)").transform.position, lineStartPoint.transform.position) <= 1f)
-                pullupFishObj.SetActive(true);
-                if (Input.GetKeyDown(KeyCode.E) && fishLogicScript.isFishOn) StartCoroutine(DisplayStatsForSeconds());
-                if (Input.GetKeyDown(KeyCode.E)) { Destroy(GameObject.Find("Bobber(Clone)")); power = -3; fishLogicScript.isFishOn = false; fishCaught = false; fishChosen = false; pullupFishObj.SetActive(false); }
+
             
         // fish fighting mechanics
-        if (fishLogicScript.isFishOn)
+        else if (bobber_state == BobberState.CaughtInWater)
         {
-            // make fish weight here
-            if (!fishWeightSet) fishWeight = Random.Range((float) fishLogicScript.fishon.minWeight, (float)fishLogicScript.fishon.maxWeight);  fishWeightSet = true;
-        }
-        // make sure the fish moves when its not caught
-        if (fishCaught && totalSpeed >= 0) {
-            GameObject.Find("Bobber(Clone)").transform.position += Vector3.up * totalSpeed * Time.deltaTime;
-            if (Vector2.Distance(GameObject.Find("Bobber(Clone)").transform.position, lineStartPoint.transform.position) <= 1f)
-                totalSpeed = 0;
+            // calculate fish weight
+            fishWeight = Random.Range((float) fishLogicScript.fishon.minWeight, (float)fishLogicScript.fishon.maxWeight);
 
+            // swim away
+            bobber.transform.position += (bobber.transform.position - rod_tip.transform.position).normalized * fish_speed * Time.deltaTime * .1f;
+
+            // reel in
+            if (Input.GetMouseButtonDown(0))
+                bobber.transform.position -= (bobber.transform.position - rod_tip.transform.position).normalized * rodStrength * .01f;
         }
-        // if the fish has not been pulled up, reel in with that rods strength
-        if (fishCaught && totalSpeed >= 0)
-            if (Input.GetMouseButton(0))
-                GameObject.Find("Bobber(Clone)").transform.position -= (GameObject.Find("Bobber(Clone)").transform.position - lineStartPoint.transform.position).normalized * rodStrength * .01f;
-        // update the line every frame
-        lineRenderer.SetPosition(0, lineStartPoint.transform.position);
-        if (GameObject.Find("Bobber(Clone)")) lineRenderer.SetPosition(1, GameObject.Find("Bobber(Clone)").transform.position);
+
+        // if the bobber is close enough, pull up
+        if (
+            (bobber_state == BobberState.WaitingInWater ||
+             bobber_state == BobberState.CaughtInWater) &&
+            Vector2.Distance(bobber.transform.position, rod_tip.transform.position) <= .5f)
+        {
+            Destroy(bobber);
+
+            if (bobber_state == BobberState.CaughtInWater)
+            {
+                StartCoroutine(DisplayStatsForSeconds());
+                fish_speed = 0f;
+            }
+
+            bobber_state = BobberState.InHand;
+        }
+
+        print(bobber_state);
     }
 
     void FishCaught()
     {
-        fishCaught = true;
         StartCoroutine(DisplayHitUISeconds());
-        pullawaySpeed = fishLogicScript.fishon.fightPower;
-        totalSpeed = pullawaySpeed;
+        fish_speed = fishLogicScript.fishon.fightPower;
     }
-
-    IEnumerator WaitForHit()
-    {
-        yield return new WaitForSeconds(Random.Range(3, 12));
-        FishCaught();
-    }
-
     IEnumerator DisplayHitUISeconds()
     {
         hitText.SetActive(true);
