@@ -12,19 +12,15 @@ public class RodManager : MonoBehaviour
     [SerializeField] Slider castPowerSlider;
     [SerializeField] GameObject castPowerSliderObj;
     [SerializeField] GameObject hitText;
-    [SerializeField] TMP_Text pullupFishText;
     [SerializeField] GameObject pullupFishObj;
     [SerializeField] TMP_Text fishStatText;
     [SerializeField] GameObject fishStatObj;
-    [SerializeField] Slider reelSlider;
-    [SerializeField] GameObject reelSliderObj;
 
     // add these for each rod
     [Header("Rod Independents")]
     [SerializeField] string rodName;
     [SerializeField] GameObject rodSprite;
     [SerializeField] float rodStrength;
-    [SerializeField] SpriteRenderer spriteRenderer;
     //[SerializeField] float rodUseAmount; // define later
 
     [Header("Rod Essientals")]
@@ -40,7 +36,7 @@ public class RodManager : MonoBehaviour
     bool fishWeightSet = false;
     bool fishChosen = false;
 
-    float reelSpeed = .5f;
+    float reelSpeed = 1f;
     bool fishCaught = false;
     float pullawaySpeed;
     float totalSpeed;

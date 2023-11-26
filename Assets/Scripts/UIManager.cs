@@ -105,6 +105,14 @@ The WORST lake in the Northeast!
 - NO fish
 - maybe SOME junk"
         ));
+
+        windows.Add(new Window(
+            "LakePowell", true, 0f, 120f,
+            @"Lake Powell
+
+            Basic Lake with Catfish, Largemouth Bass, Striped Bass, Bluegill.
+            Enjoyable time for the whole family."
+        ));
     }
 
     private void Start()

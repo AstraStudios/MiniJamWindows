@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/shop.unity
     guid: 15c5e5b63f48d8e4fa869dd72fa807df
+  - enabled: 1
+    path: Assets/Scenes/LakePowell.unity
+    guid: cc5870d386462409c93034887be8c1f4
   m_configObjects: {}
