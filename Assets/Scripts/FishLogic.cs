@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class FishLogic : MonoBehaviour
@@ -27,6 +28,25 @@ public class FishLogic : MonoBehaviour
     List<Fish> Everglades = new List<Fish>();
     List<Fish> LakeFork = new List<Fish>();
     List<Fish> LakeMichigan = new List<Fish>();
+
+    public void CatchUIFish(float weight)
+    {
+        GameObject new_fish = new GameObject();
+
+        FishUI fish_ui = new_fish.AddComponent<FishUI>();
+
+        fish_ui.name = fishon.Name;
+        fish_ui.weight = weight;
+
+        new_fish.AddComponent<CanvasRenderer>();
+        Image image = new_fish.AddComponent<Image>();
+        image.sprite = fishon.fishSprite;
+        image.preserveAspect = true;
+
+        new_fish.GetComponent<RectTransform>().sizeDelta = new Vector2(60f, 40f);
+
+        InventoryManager.Instance.current_fish = fish_ui;
+    }
 
     private void Awake()
     {

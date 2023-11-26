@@ -87,7 +87,7 @@ Sell your fish and buy new gear!"
        ));
 
         windows.Add(new Window(
-            "sethtesting", false, 10f, 0f,
+            "FishingSystemTest", false, 0f, 0f,
 @"Silly Lake
 
 The best lake in the Northeast!
@@ -244,7 +244,7 @@ The WORST lake in the Northeast!
         InventoryManager.Instance.money -= active_window.price;
 
         active_window.open = true;
-        active_window.timer = 15f;
+        active_window.timer = 45f;
         window_state = WindowState.Opening;
     }
 

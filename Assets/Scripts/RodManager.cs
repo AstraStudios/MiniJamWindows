@@ -50,33 +50,15 @@ public class RodManager : MonoBehaviour
     {
         if (bobber_state == BobberState.InHand)
         {
-            // start charging
             if (Input.GetMouseButtonDown(0))
             {
-                charge_power_slider.gameObject.SetActive(true);
-                bobber_state = BobberState.Swinging;
-                charge_power = 0;
-            }
-        }
-
-        // holding rod back
-        else if (bobber_state == BobberState.Swinging)
-        {
-            // charge
-            if (charge_power < 1) charge_power += Time.deltaTime / 2f;
-            charge_power = Mathf.Clamp(charge_power, 0f, 1f);
-            charge_power_slider.value = charge_power;
-
-            // cast (make bobber)
-            if (Input.GetMouseButtonUp(0) || charge_power == 1f)
-            {
-                charge_power_slider.gameObject.SetActive(false);
-
                 bobber = Instantiate(bobber_prefab);
                 bobber.transform.position = rod_tip.transform.position;
-                water_point = Vector3.Lerp(rod_tip.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), charge_power);
 
                 bobber_state = BobberState.InAir;
+                in_air_time = 0f;
+
+                water_point = new Vector3(Random.Range(-3, 0), Random.Range(-3, 3), 0);
             }
         }
 
@@ -146,14 +128,13 @@ public class RodManager : MonoBehaviour
 
             if (bobber_state == BobberState.CaughtInWater)
             {
+                fishLogicScript.CatchUIFish(fishWeight);
                 StartCoroutine(DisplayStatsForSeconds());
                 fish_speed = 0f;
             }
 
             bobber_state = BobberState.InHand;
         }
-
-        print(bobber_state);
     }
 
     void FishCaught()
@@ -171,7 +152,7 @@ public class RodManager : MonoBehaviour
     IEnumerator DisplayStatsForSeconds()
     {
         fishStatObj.SetActive(true);
-        fishStatText.text = ("You caught a " + fishLogicScript.fishon.Name + " that weights: " + fishWeight + ". Good Job!");
+        fishStatText.text = ("You caught a " + fishLogicScript.fishon.Name + " that weights " + Mathf.Round(fishWeight) + "lb. Good Job!");
         yield return new WaitForSeconds(5);
         fishStatObj.SetActive(false);
     }

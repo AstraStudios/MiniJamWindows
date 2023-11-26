@@ -41,7 +41,6 @@ public class FishTank : MonoBehaviour
                 fish.transform.position.y,
                 fish.transform.position.z
             ) ;
-            fishRenderer.flipX = true;
             index++;
         }
 
