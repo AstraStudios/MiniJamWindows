@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class ShopManager : MonoBehaviourSingleton<ShopManager>
 {
-    [SerializeField] List<GameObject> high_shelf_prefabs;
-    [SerializeField] List<GameObject> low_shelf_prefabs;
+    [SerializeField] FishTank sell_tank;
+
+    [SerializeField] List<GameObject> item_prefabs;
+    [SerializeField] Transform item_parent;
 
     [SerializeField] Transform high_shelf;
     [SerializeField] Transform low_shelf;
@@ -29,27 +31,33 @@ public class ShopManager : MonoBehaviourSingleton<ShopManager>
             list[randomIndex] = temp;
         }
 
-        return _list;
+        return list;
     }
 
     public void LoadItems()
     {
+        // delete all items
+        for (int i = 0; i < item_parent.childCount; i++)
+            Destroy(item_parent.GetChild(i).gameObject);
+
+        // clear tank
+        sell_tank.fishies = new List<FishUI>();
+
         // load items onto high shelf
-        List<GameObject> shuffled = Shuffle(high_shelf_prefabs);
+        List<GameObject> shuffled = Shuffle(item_prefabs);
         for (int index=0; index<3; index++)
         {
-            Transform item = Instantiate(shuffled[Random.Range(0, shuffled.Count)]).transform;
+            Transform item = Instantiate(shuffled[index]).transform;
             item.position = high_shelf_item_spawner.position + Vector3.right * (60f * (float)index);
-            item.SetParent(high_shelf);
+            item.SetParent(item_parent);
         }
 
         // load items onto low shelf
-        shuffled = Shuffle(low_shelf_prefabs);
-        for (int index=0; index<2; index++)
+        for (int index=3; index<4; index++)
         {
-            Transform item = Instantiate(shuffled[Random.Range(0, shuffled.Count)]).transform;
-            item.position = low_shelf_item_spawner.position + Vector3.right * (60f * (float)index);
-            item.SetParent(low_shelf);
+            Transform item = Instantiate(shuffled[index]).transform;
+            item.position = low_shelf_item_spawner.position + Vector3.right * (60f * ((float)index-3f));
+            item.SetParent(item_parent);
         }
     }
 }

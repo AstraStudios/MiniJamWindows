@@ -14,10 +14,6 @@ public class FishTank : MonoBehaviour
     public void Awake()
     {
         fishies = new List<FishUI>();
-    }
-
-    private void Start()
-    {
         hover_text = gameObject.AddComponent<DisplayInfoOnHover>();
     }
 

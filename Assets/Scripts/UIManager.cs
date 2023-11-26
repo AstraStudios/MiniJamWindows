@@ -5,41 +5,67 @@ using UnityEngine.SceneManagement;
 using TMPro;
 
 
-struct Window {
+class Window {
+    public string scene_name;
+    public string description;
+    public float timer;
+    public bool open = true;
+
     public Window(string name, float timer_, string description_) {
         scene_name = name;
         description = description_;
         timer = timer_;
     }
 
-    public string scene_name;
-    public string description;
-    public float timer;
+    // true if should close
+    public bool tick()
+    {
+        if (!open) return false;
+
+        timer -= Time.deltaTime;
+
+        if (timer <= 0)
+        {
+            open = false;
+            timer = 0f;
+            return true;
+        }
+        return false;
+    }
 }
 
 public class UIManager : MonoBehaviourSingletonPersistent<UIManager>
 {
     ////// FIELDS
 
-    [SerializeField] float time_to_open;
+    //[SerializeField] float time_to_open;
+
+    [SerializeField] GameObject shopUI;
 
     [SerializeField] Transform shutters;
     [SerializeField] Transform shutter_closed;
     [SerializeField] Transform shutter_opened;
 
     [SerializeField] TMP_Text description;
+    [SerializeField] TMP_Text timer_text;
 
     ////// PRIVATE MEMBERS
 
     List<Window> windows;
-    uint active_window_index = 0;
+    int active_window_index = 0;
 
     ////// STATE ):
 
     // TODO: convert to an enum
-    bool closing_shutters = false;
-    bool opening_shutters = false;
-    float changing_sutters_start = 0; // time
+    enum WindowState
+    {
+        Closing,
+        Opening,
+        Open,
+        Closed,
+    }
+    WindowState window_state = WindowState.Open; 
+    float opening_shutters_percent = 1f;
 
     private void Awake()
     {
@@ -47,7 +73,7 @@ public class UIManager : MonoBehaviourSingletonPersistent<UIManager>
 
         windows = new List<Window>();
         windows.Add(new Window(
-            "shop", (1f*60f)+30f,
+            "shop", (0f*60f)+15f,
 @"The Shop
 
 Sell your fish and buy new gear!"
@@ -74,56 +100,102 @@ The WORST lake in the Northeast!
 
     private void Start()
     {
-        description.text = windows[(int)active_window_index].description;
+        description.text = windows[active_window_index].description;
     }
 
     private void Update()
     {
+        int i = 0;
+        foreach (Window window in windows)
+        {
+            bool close = window.tick();
+            if (close && window == windows[active_window_index])
+                window_state = WindowState.Closing;
+
+            // change the shop if not active
+            if (close && i == 0 && active_window_index != i)
+            {
+                ShopManager.Instance.LoadItems();
+                window.open = true;
+                window.timer = 20f;
+            }
+
+            i++;
+        }
+
+        timer_text.text = 
+            Mathf.FloorToInt(windows[active_window_index].timer / 60f).ToString() + 
+            ":" +
+            Mathf.RoundToInt(windows[active_window_index].timer % 60f).ToString("D2");
+
         // since how open the shutters are is dependent on the difference from the time,
         // if it is the same it is forced to one of the positions
-        if (!(closing_shutters || opening_shutters))
-            changing_sutters_start = Time.time;
+        if (window_state == WindowState.Opening)
+             opening_shutters_percent += Time.deltaTime;
+        if (window_state == WindowState.Closing)
+             opening_shutters_percent -= Time.deltaTime;
 
-        // move shutters from opened to closed
-        shutters.position = Vector3.Lerp(
-            shutter_opened.position,
-            shutter_closed.position,
-            (opening_shutters? // invert if opening
-                 1 - (Time.time - changing_sutters_start) / time_to_open :
-                 (Time.time - changing_sutters_start) / time_to_open
-            ));
 
-        // if we just finished closing
+        // done closing
         // LOADS NEW SCENE
-        if (Time.time - changing_sutters_start >= 1.0 && closing_shutters)
+        if (opening_shutters_percent <= 0.0 && window_state == WindowState.Closing)
         {
             shutters.position = shutter_closed.position;
 
-            // start opening
-            changing_sutters_start = Time.time;
-            opening_shutters = true;
-            closing_shutters = false;
+            window_state = WindowState.Closed;
 
-            // load scene
-            SceneManager.LoadScene(windows[(int)active_window_index].scene_name);
-            description.text = windows[(int)active_window_index].description;
+            // open new scene
+            if (windows[active_window_index].open)
+            {
+                window_state = WindowState.Opening;
+
+                // load scene
+                SceneManager.LoadScene(windows[active_window_index].scene_name);
+                description.text = windows[active_window_index].description;
+            }
+            // if the window is the shop, activate it
+            if (active_window_index == 0)
+            {
+                window_state = WindowState.Opening;
+                shopUI.SetActive(true);
+
+                if (!windows[active_window_index].open)
+                {
+                    ShopManager.Instance.LoadItems();
+                    windows[active_window_index].open = true;
+                    windows[active_window_index].timer = 20f;
+                }
+            }
+            else shopUI.SetActive(false);
+
+            // lock window
+            opening_shutters_percent = 0.0f;
         }
-        // if we just finished opening
-        if (Time.time - changing_sutters_start >= 1.0 && opening_shutters)
+
+        // done opening
+        if (opening_shutters_percent >= 1.0 && window_state == WindowState.Opening)
         {
-            shutters.position = shutter_opened.position;
+            window_state = WindowState.Open;
 
-            opening_shutters = false;
+            opening_shutters_percent = 1.0f;
         }
+
+        // move shutters from closed to open
+        shutters.position = Vector3.Lerp(
+            shutter_closed.position,
+            shutter_opened.position,
+            opening_shutters_percent);
     }
 
-    void loadWindow(uint index)
+    void loadWindow(int index)
     {
-        active_window_index = index;
+        if (index < 0) return;
+        if (index >= windows.Count) return;
 
-        // start opening
-        changing_sutters_start = Time.time;
-        closing_shutters = true;
+        //if (!(window_state == WindowState.Open || window_state == WindowState.Closed)) return;
+
+        active_window_index = index;
+        window_state = WindowState.Closing; 
     }
 
     // TODO: add limits

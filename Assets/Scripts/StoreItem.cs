@@ -25,14 +25,14 @@ public class StoreItem : MonoBehaviour
     [SerializeField] public BaitUI bait;
     [SerializeField] public FishUI fish;
 
-    [SerializeField] public float price;
+    [SerializeField] public float price = 10f;
     [SerializeField] TMP_Text price_text_box;
 
     public bool isFish() { return fish != null; }
     public bool isBait() { return bait != null; }
     public bool isRod() { return rod != null; }
 
-    private void Start()
+    private void Awake()
     {
         price_text_box.text = price.ToString() + "c";
     }
