@@ -12,6 +12,10 @@ public class RodManager : MonoBehaviour
     [SerializeField] Slider castPowerSlider;
     [SerializeField] GameObject castPowerSliderObj;
     [SerializeField] GameObject hitText;
+    [SerializeField] TMP_Text pullupFishText;
+    [SerializeField] GameObject pullupFishObj;
+    [SerializeField] TMP_Text fishStatText;
+    [SerializeField] GameObject fishStatObj;
     [SerializeField] Slider reelSlider;
     [SerializeField] GameObject reelSliderObj;
 
@@ -89,7 +93,8 @@ public class RodManager : MonoBehaviour
         }
         // pull up(hopefully gets better)
         if (GameObject.Find("Bobber(Clone)"))
-            if (Vector2.Distance(GameObject.Find("Bobber(Clone)").transform.position, lineStartPoint.transform.position) <= 1)
+            if (Vector2.Distance(GameObject.Find("Bobber(Clone)").transform.position, lineStartPoint.transform.position) <= 3f)
+                if (Input.GetKeyDown(KeyCode.E) && fishLogicScript.isFishOn) StartCoroutine(DisplayStatsForSeconds());
                 if (Input.GetKeyDown(KeyCode.E)) { Destroy(GameObject.Find("Bobber(Clone)")); power = -3; fishLogicScript.isFishOn = false; fishCaught = false; fishChosen = false; }
         // fish fighting mechanics
         if (fishLogicScript.isFishOn)
@@ -99,15 +104,15 @@ public class RodManager : MonoBehaviour
         }
         // make sure the fish moves when its not caught
         if (fishCaught && totalSpeed >= 0) {
-            if (Vector2.Distance(GameObject.Find("Bobber(Clone)").transform.position, lineStartPoint.transform.position) < 5f) {
-                GameObject.Find("Bobber(Clone)").transform.position = Vector2.MoveTowards(GameObject.Find("Bobber(Clone)").transform.position, new Vector2(GameObject.Find("Bobber(Clone)").transform.position.x - lineStartPoint.transform.position.x, GameObject.Find("Bobber(Clone)").transform.position.y - lineStartPoint.transform.position.y), totalSpeed * 1f * Time.deltaTime);
-            }
-            if (Vector2.Distance(GameObject.Find("Bobber(Clone)").transform.position, lineStartPoint.transform.position) > 5f)
-                GameObject.Find("Bobber(Clone)").transform.position = Vector2.MoveTowards(GameObject.Find("Bobber(Clone)").transform.position, new Vector2(lineStartPoint.transform.position.x, lineStartPoint.transform.position.y), totalSpeed * 1f * Time.deltaTime);
+            GameObject.Find("Bobber(Clone)").transform.position += Vector3.up * totalSpeed * Time.deltaTime;
+            if (Vector2.Distance(GameObject.Find("Bobber(Clone)").transform.position, lineStartPoint.transform.position) <= 2f)
+                totalSpeed = 0;
 
-        }        
+        }
         // if the fish has not been pulled up, reel in with that rods strength
-        if (fishCaught && totalSpeed >= 0) { if (Input.GetMouseButtonDown(0)) { totalSpeed -= .01f * rodStrength; } }
+        if (fishCaught && totalSpeed >= 0)
+            if (Input.GetMouseButtonDown(0))
+                GameObject.Find("Bobber(Clone)").transform.position -= (GameObject.Find("Bobber(Clone)").transform.position - lineStartPoint.transform.position).normalized * rodStrength;
         // update the line every frame
         lineRenderer.SetPosition(0, lineStartPoint.transform.position);
         lineRenderer.SetPosition(1, GameObject.Find("Bobber(Clone)").transform.position);
@@ -132,5 +137,13 @@ public class RodManager : MonoBehaviour
         hitText.SetActive(true);
         yield return new WaitForSeconds(2);
         hitText.SetActive(false);
+    }
+
+    IEnumerator DisplayStatsForSeconds()
+    {
+        fishStatObj.SetActive(true);
+        fishStatText.text = ("You caught a " + fishLogicScript.fishon.Name + " that weights: " + fishWeight + ". Good Job!");
+        yield return new WaitForSeconds(5);
+        fishStatObj.SetActive(false);
     }
 }
